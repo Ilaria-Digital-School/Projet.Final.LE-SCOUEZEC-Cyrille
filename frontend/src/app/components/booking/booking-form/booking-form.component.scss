@@ -1,0 +1,88 @@
+// Page Formulaire de Réservation - Thème Book Your Travel
+.booking-form-page {
+  background: var(--bg-light);
+  min-height: 100vh;
+
+  .booking-grid-travel {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2.5rem;
+    align-items: start;
+
+    @media (max-width: 992px) { grid-template-columns: 1fr; }
+  }
+
+  // Section du formulaire
+  .booking-main-form {
+    padding: 2.5rem;
+    
+    @media (max-width: 600px) { padding: 1.5rem; }
+
+    .form-section-travel {
+      border: none; padding: 0; margin: 0 0 2.5rem; border-bottom: 2px solid var(--bg-light); padding-bottom: 2rem;
+      &:last-of-type { border-bottom: none; margin-bottom: 1.5rem; }
+
+      legend { font-size: 1.1rem; font-weight: 800; color: var(--primary-color); margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
+    }
+
+    .form-row-travel {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+      @media (max-width: 500px) { grid-template-columns: 1fr; }
+    }
+
+    .capacity-note { font-size: 0.8rem; color: #aaa; margin-top: 0.5rem; font-style: italic; }
+
+    .availability-status {
+      padding: 1rem; border-radius: 2px; margin-top: 1rem; font-size: 0.9rem; font-weight: 700;
+      &.checking { background: #f0f0f0; color: #888; display: flex; align-items: center; gap: 0.5rem; }
+      &.available { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
+      &.unavailable { background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }
+    }
+  }
+
+  // Récapitulatif à droite
+  .booking-summary-travel {
+    .summary-card {
+      padding: 0; overflow: hidden;
+      &.sticky-top { position: sticky; top: 100px; }
+
+      .summary-img { height: 180px; img { width: 100%; height: 100%; object-fit: cover; } }
+
+      .summary-content {
+        padding: 1.5rem;
+        h3 { font-size: 1.2rem; margin-bottom: 0.5rem; text-transform: none; }
+        .hotel-info { font-weight: 700; color: var(--primary-color); margin-bottom: 0.2rem; }
+        .location-info { font-size: 0.85rem; color: #aaa; margin-bottom: 1rem; }
+        
+        .room-badges {
+          display: flex; gap: 0.8rem; align-items: center; margin-bottom: 1.5rem;
+          .badge { background: var(--secondary-color); color: #fff; padding: 3px 10px; border-radius: 2px; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; }
+          .size { font-size: 0.8rem; font-weight: 700; color: #888; }
+        }
+
+        .price-details-travel {
+          border-top: 2px dashed var(--bg-light); padding-top: 1.5rem; margin-bottom: 1.5rem;
+          h4 { font-size: 0.8rem; text-transform: uppercase; color: #aaa; margin-bottom: 1rem; }
+          .price-row {
+            display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 0.9rem;
+            &.total {
+              margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--bg-light);
+              font-weight: 800; font-size: 1.1rem; color: var(--primary-color);
+              .value { color: var(--secondary-color); }
+            }
+          }
+        }
+
+        .user-summary {
+          border-top: 1px solid var(--bg-light); padding-top: 1.5rem;
+          h4 { font-size: 0.8rem; text-transform: uppercase; color: #aaa; margin-bottom: 0.5rem; }
+          p { font-size: 0.9rem; margin-bottom: 0; }
+          .small { font-size: 0.8rem; color: #aaa; }
+        }
+      }
+    }
+  }
+}
+
+.section-title { margin-bottom: 3rem; .title-line { width: 60px; height: 3px; background: var(--secondary-color); margin: 0.8rem auto; } }
+.loader-area { text-align: center; padding: 5rem; }

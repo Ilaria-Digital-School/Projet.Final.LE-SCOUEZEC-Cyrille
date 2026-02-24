@@ -1,0 +1,203 @@
+<main class="dashboard-page" aria-labelledby="dash-title">
+  <div class="container section-padding">
+    <!-- Header du Dashboard -->
+    <header class="dashboard-header-travel">
+      <div class="welcome-text">
+        <h1 id="dash-title">Espace <span class="accent">Hôtelier</span></h1>
+        <p>Gérez vos établissements et suivez vos performances en temps réel.</p>
+      </div>
+      <div class="header-actions">
+        <a routerLink="/dashboard/hotelier/hotels/new" class="btn btn-primary">
+          ➕ Ajouter un établissement
+        </a>
+      </div>
+    </header>
+
+    <!-- Statistiques Clés -->
+    <section class="stats-grid-travel" aria-label="Statistiques de performance">
+      <div class="stat-card">
+        <span class="icon" aria-hidden="true">🏨</span>
+        <div class="info">
+          <span class="value">{{ stats.totalHotels }}</span>
+          <span class="label">Établissements</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="icon" aria-hidden="true">📋</span>
+        <div class="info">
+          <span class="value">{{ stats.totalBookings }}</span>
+          <span class="label">Réservations</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="icon" aria-hidden="true">⏳</span>
+        <div class="info">
+          <span class="value">{{ stats.pendingBookings }}</span>
+          <span class="label">En attente</span>
+        </div>
+      </div>
+      <div class="stat-card highlight">
+        <span class="icon" aria-hidden="true">💰</span>
+        <div class="info">
+          <span class="value">{{ stats.revenue | number:'1.0-0' }} €</span>
+          <span class="label">Chiffre d'affaires</span>
+        </div>
+      </div>
+    </section>
+
+    @if (loading) {
+      <div class="loader-area" aria-live="polite">
+        <div class="spinner spinner-primary"></div>
+        <p>Chargement de vos données...</p>
+      </div>
+    } @else {
+      <!-- Liste des Hôtels -->
+      <section class="dashboard-section card" aria-labelledby="hotels-title">
+        <div class="section-header">
+          <h2 id="hotels-title">Mes Établissements</h2>
+        </div>
+
+        @if (hotels.length === 0) {
+          <div class="empty-state text-center p-4">
+            <div class="icon" aria-hidden="true">🏨</div>
+            <h3>Aucun hôtel enregistré</h3>
+            <p>Commencez par ajouter votre premier établissement pour recevoir des réservations.</p>
+            <a routerLink="/dashboard/hotelier/hotels/new" class="btn btn-primary mt-2">Ajouter mon premier hôtel</a>
+          </div>
+        } @else {
+          <div class="hotels-management-grid">
+            @for (hotel of hotels; track hotel._id) {
+              <article class="hotel-manage-card" [class.selected]="hotel._id === selectedHotelId">
+                <div class="card-info">
+                  <h3>{{ hotel.name }}</h3>
+                  <div class="stars">
+                    @for (s of [1,2,3,4,5]; track s) {
+                      <span [class.filled]="s <= hotel.stars">★</span>
+                    }
+                  </div>
+                  <p class="location">📍 {{ hotel.address.city }}</p>
+                </div>
+                <div class="card-actions">
+                  <button class="btn btn-sm btn-outline" (click)="onHotelChange(hotel._id)" title="Gérer les chambres et réservations">Sélectionner</button>
+                  <div class="action-icons">
+                    <a [routerLink]="['/dashboard/hotelier/hotels', hotel._id, 'edit']" class="icon-btn" title="Modifier l'hôtel">✏️</a>
+                    <a [routerLink]="['/dashboard/hotelier/hotels', hotel._id, 'rooms', 'new']" class="icon-btn" title="Ajouter une chambre">🛏️</a>
+                    <button class="icon-btn delete" (click)="deleteHotel(hotel)" title="Supprimer l'hôtel">🗑️</button>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- Gestion des Chambres -->
+      @if (hotels.length > 0) {
+        <section class="dashboard-section card mt-4" aria-labelledby="rooms-title">
+          <div class="section-header">
+            <h2 id="rooms-title">Chambres : <span class="hotel-name-highlight">{{ getSelectedHotelName() }}</span></h2>
+            <a [routerLink]="['/dashboard/hotelier/hotels', selectedHotelId, 'rooms', 'new']" class="btn btn-sm btn-primary">
+              ➕ Ajouter une chambre
+            </a>
+          </div>
+
+          <div class="table-responsive-travel">
+            @if (roomsLoading) {
+              <p class="p-2">Chargement des chambres...</p>
+            } @else if (rooms.length === 0) {
+              <p class="empty-msg p-2">Aucune chambre pour cet établissement.</p>
+            } @else {
+              <table class="table-travel">
+                <thead>
+                  <tr>
+                    <th>Type de chambre</th>
+                    <th>Tarif / Nuit</th>
+                    <th>Capacité</th>
+                    <th>Stock</th>
+                    <th class="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (room of rooms; track room._id) {
+                    <tr>
+                      <td class="font-bold">{{ room.name }} <span class="room-type-tag">{{ room.type }}</span></td>
+                      <td class="price-val">{{ room.price | number:'1.0-0' }} €</td>
+                      <td>👤{{ room.capacity.adults }} + 👶{{ room.capacity.children }}</td>
+                      <td>{{ room.quantity }} unité(s)</td>
+                      <td class="text-right">
+                        <a [routerLink]="['/dashboard/hotelier/rooms', room._id, 'edit']" class="icon-btn" title="Modifier">✏️</a>
+                        <button class="icon-btn delete" (click)="deleteRoom(room)" title="Supprimer">🗑️</button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
+          </div>
+        </section>
+
+        <!-- Réservations Récentes -->
+        <section class="dashboard-section card mt-4" aria-labelledby="bookings-title">
+          <div class="section-header">
+            <h2 id="bookings-title">Dernières Réservations</h2>
+            <div class="hotel-selector">
+              <label for="hotel-select">Voir pour :</label>
+              <select id="hotel-select" [(ngModel)]="selectedHotelId" (change)="onHotelChange(selectedHotelId)">
+                @for (hotel of hotels; track hotel._id) {
+                  <option [value]="hotel._id">{{ hotel.name }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive-travel">
+            @if (bookingsLoading) {
+              <p class="p-2">Chargement des réservations...</p>
+            } @else if (recentBookings.length === 0) {
+              <p class="empty-msg p-2">Aucune réservation trouvée.</p>
+            } @else {
+              <table class="table-travel">
+                <thead>
+                  <tr>
+                    <th>Voyageur</th>
+                    <th>Dates du séjour</th>
+                    <th>Nuits</th>
+                    <th>Total</th>
+                    <th>Statut</th>
+                    <th class="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (booking of recentBookings; track booking._id) {
+                    <tr>
+                      <td>
+                        <div class="guest-details">
+                          <span class="name">{{ getGuestName(booking) }}</span>
+                          <span class="email">{{ booking.guestInfo.email }}</span>
+                        </div>
+                      </td>
+                      <td>{{ formatDate(booking.checkInDate) }} → {{ formatDate(booking.checkOutDate) }}</td>
+                      <td>{{ booking.numberOfNights }}</td>
+                      <td class="price-val">{{ booking.totalPrice | number:'1.0-0' }} €</td>
+                      <td>
+                        <span class="badge" [ngClass]="getStatusClass(booking.status)">
+                          {{ getStatusLabel(booking.status) }}
+                        </span>
+                      </td>
+                      <td class="text-right">
+                        @if (booking.status === 'pending') {
+                          <button class="btn btn-sm btn-success mr-1" (click)="confirmBooking(booking)">Confirmer</button>
+                        }
+                        <a [routerLink]="['/bookings', booking._id]" class="btn btn-sm btn-outline">Détails</a>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
+          </div>
+        </section>
+      }
+    }
+  </div>
+</main>

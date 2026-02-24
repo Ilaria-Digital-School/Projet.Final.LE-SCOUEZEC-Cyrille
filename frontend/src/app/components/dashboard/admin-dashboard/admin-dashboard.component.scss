@@ -1,0 +1,69 @@
+// Tableau de Bord Administrateur - Thème Book Your Travel
+.admin-dashboard {
+  background: var(--bg-light);
+  min-height: 100vh;
+}
+
+// Navigation par Onglets
+.tabs-travel {
+  display: flex; gap: 0.5rem; margin-bottom: 0; border-bottom: 2px solid var(--border-color);
+  @media (max-width: 600px) { overflow-x: auto; white-space: nowrap; }
+
+  .tab-btn {
+    padding: 1rem 2rem; background: none; border: none; border-bottom: 3px solid transparent;
+    font-size: 0.9rem; font-weight: 800; text-transform: uppercase; color: #aaa; cursor: pointer; transition: var(--transition);
+    
+    &:hover { color: var(--primary-color); }
+    &.active { color: var(--primary-color); border-bottom-color: var(--secondary-color); }
+  }
+}
+
+.tab-content-travel {
+  background: var(--white); padding: 2.5rem; border: 1px solid var(--border-color); border-top: none;
+  @media (max-width: 600px) { padding: 1.5rem; }
+}
+
+// Overview Section
+.overview-grid-travel {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem;
+  @media (max-width: 850px) { grid-template-columns: 1fr; }
+
+  .overview-card {
+    h3 { font-size: 1rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--bg-light); padding-bottom: 0.5rem; }
+    .breakdown-row {
+      display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--bg-light);
+      .label { font-size: 0.9rem; color: #777; }
+      .value { font-weight: 800; color: var(--primary-color); }
+    }
+  }
+}
+
+// Filtres Utilisateurs
+.filters-bar-travel {
+  display: flex; gap: 1.5rem; padding: 1.5rem; align-items: flex-end;
+  @media (max-width: 600px) { flex-direction: column; align-items: stretch; }
+
+  .filter-group {
+    flex: 1;
+    label { display: block; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #aaa; margin-bottom: 0.5rem; }
+    input, select { width: 100%; padding: 0.7rem; border: 1px solid var(--border-color); border-radius: 2px; }
+  }
+}
+
+// Spécificités Tableaux Admin
+.user-profile-cell {
+  display: flex; align-items: center; gap: 1rem;
+  .avatar-ui { width: 32px; height: 32px; background: var(--secondary-color); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; }
+  .name { font-weight: 700; }
+}
+
+.role-select-ui { border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 2px; font-size: 0.8rem; background: #fff; cursor: pointer; }
+
+.status-indicator {
+  display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #e74c3c; margin-right: 5px;
+  &.active { background: #27ae60; }
+}
+
+.stars-ui { color: #ccc; font-size: 0.8rem; .filled { color: var(--accent-color); } }
+
+.detail-badge { font-size: 0.7rem; font-weight: 700; color: #aaa; text-transform: uppercase; position: absolute; bottom: 10px; right: 15px; }

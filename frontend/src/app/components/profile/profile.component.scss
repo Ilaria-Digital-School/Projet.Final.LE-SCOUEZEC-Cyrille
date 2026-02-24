@@ -1,0 +1,64 @@
+// Page Profil - Thème Book Your Travel
+.profile-page-travel {
+  background: var(--bg-light);
+  min-height: 100vh;
+
+  .page-title-area {
+    background: var(--primary-color); padding: 3rem 0; color: var(--white); text-align: center;
+    h1 { color: var(--white); font-size: 2.2rem; margin-bottom: 0.5rem; .accent { color: var(--secondary-color); } }
+    .breadcrumb { font-size: 0.8rem; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px; }
+  }
+}
+
+.profile-layout-grid {
+  display: grid; grid-template-columns: 350px 1fr; gap: 2.5rem; align-items: start;
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+
+// Sidebar Profil
+.profile-sidebar-card {
+  padding: 2.5rem; text-align: center;
+  
+  .user-avatar-wrap {
+    margin-bottom: 2.5rem; border-bottom: 2px solid var(--bg-light); padding-bottom: 2rem;
+    .avatar-large {
+      width: 100px; height: 100px; background: var(--secondary-color); color: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 800; margin: 0 auto 1.5rem;
+    }
+    h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .role-badge-travel { display: inline-block; padding: 4px 15px; background: var(--primary-color); color: #fff; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+  }
+
+  .user-meta-list {
+    text-align: left;
+    .meta-item {
+      margin-bottom: 1.5rem;
+      &:last-child { margin-bottom: 0; }
+      .label { display: block; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: #aaa; margin-bottom: 0.3rem; }
+      .value { font-weight: 700; color: var(--primary-color); font-size: 0.95rem; }
+    }
+  }
+}
+
+// Section Édition
+.profile-edit-section {
+  padding: 2.5rem;
+  @media (max-width: 600px) { padding: 1.5rem; }
+
+  h3 { font-size: 1.2rem; margin-bottom: 1rem; }
+  .title-line-left { width: 40px; height: 3px; background: var(--secondary-color); margin-bottom: 2.5rem; }
+
+  .form-row-travel {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    @media (max-width: 500px) { grid-template-columns: 1fr; }
+  }
+
+  .field-hint { font-size: 0.8rem; color: #aaa; margin-top: 0.5rem; font-style: italic; }
+
+  .form-footer {
+    margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--bg-light); text-align: right;
+    @media (max-width: 480px) { .btn { width: 100%; } }
+  }
+}
+
+.loader-area { text-align: center; padding: 5rem; }

@@ -1,0 +1,143 @@
+<div class="hotel-list-page">
+  <!-- En-tête de page avec fil d'Ariane -->
+  <div class="page-title-area">
+    <div class="container">
+      <h1>Nos Destinations <span class="accent">Hôtelières</span></h1>
+      <nav class="breadcrumb">Accueil / Hôtels</nav>
+    </div>
+  </div>
+
+  <div class="container section-padding">
+    <div class="content-wrapper">
+      
+      <!-- Barre latérale de filtres (Responsive : passe au-dessus sur mobile) -->
+      <aside class="filters-sidebar">
+        <div class="filter-box">
+          <h3>Filtrer par</h3>
+          
+          <!-- Recherche par Ville -->
+          <div class="filter-group">
+            <label>Ville ou Destination</label>
+            <div class="search-input-travel">
+              <input type="text" [(ngModel)]="searchCity" placeholder="Où allez-vous ?" (keyup.enter)="onSearch()">
+              <button (click)="onSearch()" aria-label="Rechercher">🔍</button>
+            </div>
+          </div>
+
+          <!-- Filtre par Étoiles -->
+          <div class="filter-group">
+            <label>Catégorie d'hôtel</label>
+            <div class="stars-filter-travel">
+              @for (star of [5, 4, 3, 2, 1]; track star) {
+                <div class="star-row" [class.active]="selectedStars === star" (click)="onStarsChange(star)">
+                  <span class="checkbox-ui"></span>
+                  <div class="star-icons">
+                    @for (s of [1,2,3,4,5]; track $index) {
+                      <span [class.filled]="$index < star">★</span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Filtre par Équipements -->
+          <div class="filter-group">
+            <label>Équipements</label>
+            <div class="amenities-list-travel">
+              @for (amenity of amenitiesList; track amenity.value) {
+                <div class="amenity-item" [class.active]="isAmenitySelected(amenity.value)" (click)="toggleAmenity(amenity.value)">
+                  <span class="checkbox-ui"></span>
+                  <span class="label">{{ amenity.label }}</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <button class="btn btn-outline btn-block mt-2" (click)="clearFilters()">Effacer les filtres</button>
+        </div>
+      </aside>
+
+      <!-- Zone principale d'affichage des résultats -->
+      <main class="hotels-main">
+        <div class="results-header-travel">
+          <h2>{{ total }} établissement{{ total > 1 ? 's' : '' }} trouvé{{ total > 1 ? 's' : '' }}</h2>
+          <div class="sort-by">
+            <label>Trier par : </label>
+            <select class="sort-select">
+              <option>Prix (croissant)</option>
+              <option>Étoiles</option>
+              <option>Popularité</option>
+            </select>
+          </div>
+        </div>
+
+        @if (loading) {
+          <!-- Animation de chargement -->
+          <div class="loader-container">
+            <div class="spinner spinner-primary"></div>
+            <p>Chargement des meilleures offres...</p>
+          </div>
+        } @else if (hotels.length === 0) {
+          <!-- Message si aucun résultat -->
+          <div class="empty-results">
+            <div class="empty-icon">🏨</div>
+            <h3>Aucun hôtel ne correspond à votre recherche</h3>
+            <p>Essayez de modifier vos filtres ou de rechercher une autre ville.</p>
+            <button class="btn btn-primary" (click)="clearFilters()">Voir tous les hôtels</button>
+          </div>
+        } @else {
+          <!-- Liste des cartes d'hôtels -->
+          <div class="hotels-list-container">
+            @for (hotel of hotels; track hotel._id) {
+              <article class="hotel-card-horizontal">
+                <!-- Image de l'hôtel avec badge de prix -->
+                <div class="card-image-wrapper">
+                  <img [src]="getHotelImage(hotel)" [alt]="hotel.name" class="hotel-img">
+                  <div class="price-badge">
+                    <span class="small-text">À partir de</span>
+                    <span class="price-value">{{ hotel.price || 85 }}€</span>
+                  </div>
+                </div>
+                
+                <!-- Informations et description -->
+                <div class="card-details">
+                  <div class="stars-rating">
+                    @for (s of getStars(hotel.stars); track $index) {
+                      <span class="star">★</span>
+                    }
+                  </div>
+                  <h3>{{ hotel.name }}</h3>
+                  <p class="location-text">📍 {{ hotel.address.city }}, {{ hotel.address.country }}</p>
+                  <p class="description-text">{{ hotel.description | slice:0:160 }}...</p>
+                  
+                  <div class="card-bottom">
+                    <div class="amenities-tags">
+                      @for (a of hotel.amenities | slice:0:3; track a) {
+                        <span class="tag">{{ a }}</span>
+                      }
+                    </div>
+                    <a [routerLink]="['/hotels', hotel._id]" class="btn btn-primary btn-sm">Réserver</a>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+
+          <!-- Système de pagination -->
+          @if (totalPages > 1) {
+            <nav class="pagination-container" aria-label="Navigation de page">
+              <button class="page-nav-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Précédent</button>
+              <div class="page-numbers">
+                @for (page of getPages(); track page) {
+                  <button class="page-btn" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
+                }
+              </div>
+              <button class="page-nav-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Suivant</button>
+            </nav>
+          }
+        }
+      </main>
+    </div>
+  </div>
+</div>

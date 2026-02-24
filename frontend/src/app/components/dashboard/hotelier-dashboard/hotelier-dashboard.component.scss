@@ -1,0 +1,91 @@
+// Tableau de Bord Hôtelier - Thème Book Your Travel
+.dashboard-page {
+  background: var(--bg-light);
+  min-height: 100vh;
+}
+
+.dashboard-header-travel {
+  display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;
+  @media (max-width: 768px) { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+  
+  .welcome-text {
+    h1 { font-size: 2.2rem; margin-bottom: 0.5rem; .accent { color: var(--secondary-color); } }
+    p { color: #888; font-size: 1rem; }
+  }
+}
+
+// Stats
+.stats-grid-travel {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 3rem;
+  @media (max-width: 992px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
+
+  .stat-card {
+    background: var(--white); padding: 1.5rem; border: 1px solid var(--border-color); border-radius: 2px;
+    display: flex; align-items: center; gap: 1rem;
+    &.highlight { background: var(--primary-color); color: var(--white); .label { color: rgba(255,255,255,0.6) !important; } .value { color: var(--secondary-color) !important; } }
+    .icon { font-size: 2rem; opacity: 0.7; }
+    .info {
+      .value { display: block; font-size: 1.4rem; font-weight: 800; color: var(--primary-color); }
+      .label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #aaa; }
+    }
+  }
+}
+
+// Sections
+.dashboard-section {
+  padding: 2rem; border-radius: 2px;
+  .section-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 0.8rem; border-bottom: 2px solid var(--bg-light);
+    h2 { font-size: 1.2rem; margin: 0; }
+    .hotel-name-highlight { color: var(--secondary-color); }
+  }
+}
+
+// Gestion des Hôtels
+.hotels-management-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;
+}
+
+.hotel-manage-card {
+  background: var(--white); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 2px;
+  transition: var(--transition);
+  &.selected { border-left: 5px solid var(--secondary-color); background: #f9f9f9; }
+  &:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+
+  .card-info {
+    margin-bottom: 1.5rem;
+    h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .stars { color: #ccc; font-size: 0.8rem; .filled { color: var(--accent-color); } }
+    .location { font-size: 0.85rem; color: #aaa; margin-top: 0.5rem; }
+  }
+
+  .card-actions {
+    display: flex; justify-content: space-between; align-items: center;
+    .action-icons { display: flex; gap: 0.5rem; }
+  }
+}
+
+// Tableaux Travel
+.table-responsive-travel {
+  overflow-x: auto;
+  .table-travel {
+    width: 100%; border-collapse: collapse; min-width: 700px;
+    th { text-align: left; padding: 1rem; background: #f8f8f8; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #aaa; border-bottom: 1px solid var(--border-color); }
+    td { padding: 1rem; border-bottom: 1px solid var(--bg-light); font-size: 0.9rem; }
+    .price-val { font-weight: 800; color: var(--primary-color); }
+    .room-type-tag { font-size: 0.65rem; background: var(--secondary-color); color: #fff; padding: 2px 6px; border-radius: 10px; margin-left: 5px; }
+  }
+}
+
+// Boutons Icones
+.icon-btn {
+  display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px;
+  background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 2px;
+  text-decoration: none; color: var(--primary-color); cursor: pointer; transition: var(--transition);
+  &:hover { background: var(--secondary-color); color: #fff; border-color: var(--secondary-color); }
+  &.delete:hover { background: #e74c3c; border-color: #e74c3c; }
+}
+
+.guest-details { .name { display: block; font-weight: 700; } .email { font-size: 0.75rem; color: #aaa; } }
+.loader-area { text-align: center; padding: 3rem; }

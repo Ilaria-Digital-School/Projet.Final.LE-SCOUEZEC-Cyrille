@@ -1,0 +1,96 @@
+<main class="profile-page-travel" aria-labelledby="profile-title">
+  <!-- En-tête -->
+  <div class="page-title-area">
+    <div class="container">
+      <h1 id="profile-title">Mon <span class="accent">Profil</span></h1>
+      <nav class="breadcrumb">Accueil / Profil</nav>
+    </div>
+  </div>
+
+  <div class="container section-padding">
+    @if (loading) {
+      <div class="loader-area" aria-live="polite">
+        <div class="spinner spinner-primary"></div>
+        <p>Chargement de vos informations...</p>
+      </div>
+    } @else if (currentUser) {
+      <div class="profile-layout-grid">
+        <!-- Carte Informations (Gauche) -->
+        <aside class="profile-sidebar-card card">
+          <div class="user-avatar-wrap">
+            <div class="avatar-large" aria-hidden="true">
+              {{ currentUser.firstName.charAt(0) }}{{ currentUser.lastName.charAt(0) }}
+            </div>
+            <h2>{{ currentUser.firstName }} {{ currentUser.lastName }}</h2>
+            <span class="role-badge-travel">{{ getRoleLabel(currentUser.role) }}</span>
+          </div>
+
+          <div class="user-meta-list">
+            <div class="meta-item">
+              <span class="label">Adresse Email</span>
+              <span class="value">{{ currentUser.email }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="label">Date d'inscription</span>
+              <span class="value">{{ formatDate(currentUser.createdAt) }}</span>
+            </div>
+            @if (currentUser.phone) {
+              <div class="meta-item">
+                <span class="label">Numéro de mobile</span>
+                <span class="value">{{ currentUser.phone }}</span>
+              </div>
+            }
+          </div>
+        </aside>
+
+        <!-- Formulaire d'édition (Droite) -->
+        <section class="profile-edit-section card">
+          <h3>Mettre à jour mes informations</h3>
+          <div class="title-line-left"></div>
+
+          @if (message) {
+            <div class="alert alert-success" role="alert">{{ message }}</div>
+          }
+          @if (error) {
+            <div class="alert alert-error" role="alert">{{ error }}</div>
+          }
+
+          <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" aria-label="Modification du profil">
+            <div class="form-row-travel">
+              <div class="form-group">
+                <label for="firstName">Prénom</label>
+                <input type="text" id="firstName" formControlName="firstName" aria-required="true" />
+              </div>
+
+              <div class="form-group">
+                <label for="lastName">Nom</label>
+                <input type="text" id="lastName" formControlName="lastName" aria-required="true" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Numéro de téléphone</label>
+              <input type="tel" id="phone" formControlName="phone" placeholder="+33 6 00 00 00 00" />
+            </div>
+
+            <div class="form-group">
+              <label>Identifiant de connexion (Email)</label>
+              <input type="email" [value]="currentUser.email" disabled aria-disabled="true" />
+              <p class="field-hint">L'email est utilisé pour vos réservations et ne peut être modifié.</p>
+            </div>
+
+            <div class="form-footer">
+              <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || saving">
+                @if (saving) {
+                  <span class="spinner-small"></span> Mise à jour...
+                } @else {
+                  Enregistrer les modifications
+                }
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+    }
+  </div>
+</main>

@@ -1,0 +1,121 @@
+// Page Amadeus Search - Thème Book Your Travel
+.amadeus-page-travel {
+  background: var(--bg-light);
+  min-height: 100vh;
+
+  .page-title-area {
+    background: var(--primary-color); padding: 3rem 0; color: var(--white); text-align: center;
+    h1 { color: var(--white); font-size: 2.2rem; margin-bottom: 0.5rem; .accent { color: var(--secondary-color); } }
+    .breadcrumb { font-size: 0.8rem; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px; }
+  }
+}
+
+// Carte de recherche
+.search-card-travel {
+  max-width: 900px; margin: 0 auto; padding: 3rem;
+  @media (max-width: 600px) { padding: 1.5rem; }
+
+  .search-header-ui {
+    text-align: center; margin-bottom: 2.5rem;
+    h2 { font-size: 1.5rem; margin-bottom: 1rem; text-transform: none; letter-spacing: 0; }
+    .title-line-center { width: 50px; height: 3px; background: var(--secondary-color); margin: 0 auto; }
+  }
+}
+
+// Autocomplete Ville
+.city-autocomplete {
+  position: relative;
+  .input-with-icon {
+    position: relative;
+    input { padding-right: 3rem; }
+    .loader-inline {
+      position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+      width: 18px; height: 18px; border: 2px solid var(--border-color); border-top-color: var(--secondary-color); border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+  }
+}
+
+.suggestions-list-ui {
+  position: absolute; top: 100%; left: 0; right: 0; background: var(--white); z-index: 100;
+  list-style: none; padding: 0; margin: 0; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  li {
+    padding: 1rem 1.5rem; display: flex; justify-content: space-between; cursor: pointer; transition: var(--transition);
+    &:hover { background: var(--bg-light); color: var(--secondary-color); }
+    .city { font-weight: 700; }
+    .code { font-size: 0.8rem; color: #aaa; }
+  }
+}
+
+.selection-confirmation { background: #f0fdf4; color: #155724; padding: 0.8rem 1.2rem; border-radius: 2px; margin-top: 1rem; font-size: 0.9rem; }
+
+// Picks Grid
+.popular-picks {
+  margin: 2rem 0;
+  h3 { font-size: 0.9rem; text-transform: uppercase; color: #aaa; margin-bottom: 1rem; letter-spacing: 1px; }
+  .picks-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;
+    .pick-card {
+      padding: 1rem; border: 1px solid var(--border-color); background: var(--white); cursor: pointer; border-radius: 2px; transition: var(--transition);
+      .name { display: block; font-weight: 800; font-size: 0.85rem; color: var(--primary-color); }
+      .country { font-size: 0.75rem; color: #aaa; }
+      &:hover { border-color: var(--secondary-color); }
+      &.selected { background: var(--secondary-color); border-color: var(--secondary-color); .name, .country { color: #fff; } }
+    }
+  }
+}
+
+.search-row-travel {
+  display: grid; grid-template-columns: 1.5fr 1.5fr 1fr; gap: 1.5rem;
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+// Liste Résultats
+.results-nav {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;
+  @media (max-width: 600px) { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  h2 { font-size: 1.4rem; flex: 1; margin: 0 1.5rem; }
+  .badge-count { font-size: 0.8rem; font-weight: 800; background: var(--bg-light); padding: 5px 12px; border-radius: 20px; }
+}
+
+.offers-cta-bar {
+  display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; margin-bottom: 2rem;
+  @media (max-width: 600px) { flex-direction: column; text-align: center; gap: 1rem; }
+  p { font-weight: 700; color: var(--primary-color); margin: 0; }
+}
+
+.amadeus-hotels-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;
+  .amadeus-hotel-card {
+    display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; transition: var(--transition);
+    &:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    .hotel-icon-ui { font-size: 2rem; opacity: 0.5; }
+    h3 { font-size: 1rem; margin-bottom: 0.3rem; text-transform: none; }
+    .distance { font-size: 0.8rem; color: #888; }
+    .ref { font-size: 0.7rem; color: #ccc; }
+  }
+}
+
+// Offres
+.offers-list-travel { display: flex; flex-direction: column; gap: 2rem; }
+.global-offer-card {
+  padding: 0; overflow: hidden;
+  .offer-hotel-header {
+    background: var(--bg-light); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center;
+    @media (max-width: 600px) { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    h3 { font-size: 1.3rem; margin: 0; }
+    .stars-ui { color: #ccc; font-size: 0.8rem; .filled { color: var(--accent-color); } }
+    .location { font-size: 0.85rem; font-weight: 700; color: #aaa; }
+  }
+  .offer-rooms-container {
+    padding: 1.5rem 2rem;
+    .single-offer-item {
+      display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 0; border-bottom: 1px solid var(--bg-light);
+      &:last-child { border-bottom: none; }
+      .room-desc { .type { display: block; font-weight: 800; color: var(--primary-color); } .beds { font-size: 0.8rem; color: #aaa; } }
+      .room-price-ui { text-align: right; .total { display: block; font-size: 1.4rem; font-weight: 800; color: var(--secondary-color); } .label { font-size: 0.7rem; text-transform: uppercase; color: #aaa; font-weight: 700; } }
+    }
+  }
+}
+
+.loader-area { text-align: center; padding: 5rem; }
+@keyframes spin { to { transform: rotate(360deg); } }

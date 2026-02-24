@@ -1,0 +1,188 @@
+<main class="booking-form-page" aria-labelledby="form-title">
+  @if (loading) {
+    <div class="loader-area" aria-live="polite">
+      <div class="spinner spinner-primary"></div>
+      <p>Préparation de votre séjour...</p>
+    </div>
+  } @else if (error && !room) {
+    <div class="container section-padding text-center">
+      <div class="error-box card">
+        <h2>😕 {{ error }}</h2>
+        <a routerLink="/hotels" class="btn btn-primary mt-2">Retour aux hôtels</a>
+      </div>
+    </div>
+  } @else if (room) {
+    <div class="container section-padding">
+      <header class="section-title text-center">
+        <h1 id="form-title">Finaliser votre <span class="accent">Réservation</span></h1>
+        <p>Vérifiez vos informations et confirmez votre séjour en quelques clics.</p>
+        <div class="title-line"></div>
+      </header>
+
+      <div class="booking-grid-travel">
+        <!-- Formulaire principal -->
+        <section class="booking-main-form card">
+          @if (error) {
+            <div class="alert alert-error" role="alert">{{ error }}</div>
+          }
+
+          <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" aria-label="Formulaire de réservation">
+            <!-- Section Dates -->
+            <fieldset class="form-section-travel">
+              <legend>📅 Dates du séjour</legend>
+              
+              <div class="form-row-travel">
+                <div class="form-group">
+                  <label for="checkInDate">Date d'arrivée</label>
+                  <input
+                    type="date"
+                    id="checkInDate"
+                    formControlName="checkInDate"
+                    [min]="minDate"
+                    [max]="maxDate"
+                    aria-required="true"
+                    [class.error]="f['checkInDate'].invalid && f['checkInDate'].touched"
+                  />
+                  @if (f['checkInDate'].invalid && f['checkInDate'].touched) {
+                    <span class="error-message">Date d'arrivée requise</span>
+                  }
+                </div>
+
+                <div class="form-group">
+                  <label for="checkOutDate">Date de départ</label>
+                  <input
+                    type="date"
+                    id="checkOutDate"
+                    formControlName="checkOutDate"
+                    [min]="minDate"
+                    [max]="maxDate"
+                    aria-required="true"
+                    [class.error]="f['checkOutDate'].invalid && f['checkOutDate'].touched"
+                  />
+                  @if (f['checkOutDate'].invalid && f['checkOutDate'].touched) {
+                    <span class="error-message">Date de départ requise</span>
+                  }
+                </div>
+              </div>
+
+              <!-- Disponibilité -->
+              @if (checkingAvailability) {
+                <div class="availability-status checking" aria-live="polite">
+                  <span class="spinner-small"></span> Vérification en cours...
+                </div>
+              } @else if (availabilityMessage) {
+                <div class="availability-status" [class.available]="isAvailable" [class.unavailable]="!isAvailable" aria-live="assertive">
+                  {{ availabilityMessage }}
+                </div>
+              }
+            </fieldset>
+
+            <!-- Section Voyageurs -->
+            <fieldset class="form-section-travel">
+              <legend>👥 Nombre de voyageurs</legend>
+              
+              <div class="form-row-travel">
+                <div class="form-group">
+                  <label for="adults">Adultes</label>
+                  <select id="adults" formControlName="adults">
+                    @for (n of [1, 2, 3, 4, 5, 6]; track n) {
+                      @if (n <= room.capacity.adults) {
+                        <option [value]="n">{{ n }} adulte{{ n > 1 ? 's' : '' }}</option>
+                      }
+                    }
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="children">Enfants</label>
+                  <select id="children" formControlName="children">
+                    @for (n of [0, 1, 2, 3, 4]; track n) {
+                      @if (n <= room.capacity.children) {
+                        <option [value]="n">{{ n }} enfant{{ n > 1 ? 's' : '' }}</option>
+                      }
+                    }
+                  </select>
+                </div>
+              </div>
+              <p class="capacity-note">Capacité max de la chambre : {{ room.capacity.adults }} adulte(s) et {{ room.capacity.children }} enfant(s).</p>
+            </fieldset>
+
+            <!-- Demandes -->
+            <fieldset class="form-section-travel">
+              <legend>💬 Demandes spéciales</legend>
+              <div class="form-group">
+                <label for="specialRequests">Commentaires ou besoins particuliers (optionnel)</label>
+                <textarea
+                  id="specialRequests"
+                  formControlName="specialRequests"
+                  rows="3"
+                  placeholder="Lit bébé, arrivée tardive, allergies..."
+                ></textarea>
+              </div>
+            </fieldset>
+
+            <button
+              type="submit"
+              class="btn btn-primary btn-block btn-lg mt-2"
+              [disabled]="bookingForm.invalid || !isAvailable || submitting"
+            >
+              @if (submitting) {
+                <span class="spinner"></span> Traitement...
+              } @else {
+                Confirmer et Payer le séjour
+              }
+            </button>
+          </form>
+        </section>
+
+        <!-- Récapitulatif à droite -->
+        <aside class="booking-summary-travel">
+          <div class="summary-card card sticky-top">
+            <div class="summary-img">
+              <img [src]="getRoomImage()" [alt]="room.name" />
+            </div>
+            
+            <div class="summary-content">
+              <h3>{{ room.name }}</h3>
+              @if (hotel) {
+                <p class="hotel-info">🏨 {{ hotel.name }}</p>
+                <p class="location-info">📍 {{ hotel.address.city }}</p>
+              }
+              
+              <div class="room-badges">
+                <span class="badge">{{ room.type }}</span>
+                @if (room.size) { <span class="size">{{ room.size }} m²</span> }
+              </div>
+
+              <div class="price-details-travel">
+                <h4>Détail du prix</h4>
+                <div class="price-row">
+                  <span>Prix / nuit</span>
+                  <span class="value">{{ room.price | number:'1.0-0' }} €</span>
+                </div>
+                @if (numberOfNights > 0) {
+                  <div class="price-row">
+                    <span>Nombre de nuits</span>
+                    <span class="value">{{ numberOfNights }}</span>
+                  </div>
+                  <div class="price-row total">
+                    <span>Prix total</span>
+                    <span class="value">{{ totalPrice | number:'1.0-0' }} €</span>
+                  </div>
+                }
+              </div>
+
+              <div class="user-summary">
+                <h4>Informations client</h4>
+                @if (currentUser) {
+                  <p><strong>{{ currentUser.firstName }} {{ currentUser.lastName }}</strong></p>
+                  <p class="small">{{ currentUser.email }}</p>
+                }
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  }
+</main>

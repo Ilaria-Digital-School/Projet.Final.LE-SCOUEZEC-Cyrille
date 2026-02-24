@@ -1,0 +1,191 @@
+<main class="amadeus-page-travel" aria-labelledby="amadeus-title">
+  <!-- En-tête -->
+  <div class="page-title-area">
+    <div class="container">
+      <h1 id="amadeus-title">Explorer le <span class="accent">Monde</span></h1>
+      <p class="breadcrumb">Amadeus API / Recherche Globale</p>
+    </div>
+  </div>
+
+  <div class="container section-padding">
+    @if (error) {
+      <div class="alert alert-error" role="alert">{{ error }}</div>
+    }
+
+    <!-- Étape 1 : Recherche -->
+    @if (step === 'search') {
+      <section class="search-card-travel card">
+        <header class="search-header-ui">
+          <h2>Quelle est votre prochaine destination ?</h2>
+          <div class="title-line-center"></div>
+        </header>
+
+        <div class="search-form-wrap">
+          <!-- Saisie Ville -->
+          <div class="form-group city-autocomplete">
+            <label for="city-input">Ville ou Aéroport</label>
+            <div class="input-with-icon">
+              <input
+                type="text"
+                id="city-input"
+                [(ngModel)]="citySearch"
+                (input)="onCityInput()"
+                (focus)="showSuggestions = citySuggestions.length > 0"
+                placeholder="Ex: Londres, Tokyo, New York..."
+                autocomplete="off"
+              />
+              @if (loadingCities) { <span class="loader-inline"></span> }
+            </div>
+
+            @if (showSuggestions && citySuggestions.length > 0) {
+              <ul class="suggestions-list-ui" role="listbox">
+                @for (city of citySuggestions; track city.iataCode) {
+                  <li (click)="selectCity(city)" role="option">
+                    <span class="city">{{ city.name }}</span>
+                    <span class="code">{{ city.iataCode }}</span>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+
+          @if (selectedCity) {
+            <div class="selection-confirmation" aria-live="polite">
+              📍 Destination choisie : <strong>{{ selectedCity.name }}</strong>
+            </div>
+          }
+
+          <!-- Destinations suggérées -->
+          <div class="popular-picks">
+            <h3>Destinations populaires</h3>
+            <div class="picks-grid">
+              @for (city of popularCities; track city.iataCode) {
+                <button
+                  type="button"
+                  class="pick-card"
+                  [class.selected]="selectedCity?.iataCode === city.iataCode"
+                  (click)="selectPopularCity(city)"
+                  [attr.aria-pressed]="selectedCity?.iataCode === city.iataCode"
+                >
+                  <span class="name">{{ city.name }}</span>
+                  <span class="country">{{ city.country }}</span>
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Options séjour -->
+          <div class="search-row-travel">
+            <div class="form-group">
+              <label for="in-date">Date d'arrivée</label>
+              <input type="date" id="in-date" [(ngModel)]="checkInDate" [min]="minDate" />
+            </div>
+            <div class="form-group">
+              <label for="out-date">Date de départ</label>
+              <input type="date" id="out-date" [(ngModel)]="checkOutDate" [min]="checkInDate" />
+            </div>
+            <div class="form-group">
+              <label for="pax">Voyageurs</label>
+              <select id="pax" [(ngModel)]="adults">
+                @for (n of [1,2,3,4,5,6]; track n) { <option [value]="n">{{ n }} Adulte{{ n > 1 ? 's' : '' }}</option> }
+              </select>
+            </div>
+          </div>
+
+          <button
+            class="btn btn-primary btn-lg btn-block mt-2"
+            (click)="searchHotels()"
+            [disabled]="!selectedCity || loadingHotels"
+          >
+            @if (loadingHotels) { <span class="spinner-small"></span> Recherche... }
+            @else { Rechercher des établissements }
+          </button>
+        </div>
+      </section>
+    }
+
+    <!-- Étape 2 : Liste des hôtels -->
+    @if (step === 'hotels') {
+      <section class="results-container-travel">
+        <header class="results-nav">
+          <button class="btn btn-outline btn-sm" (click)="goBack()">← Modifier destination</button>
+          <h2>Hôtels trouvés à {{ selectedCity?.name }}</h2>
+          <span class="badge-count">{{ hotels.length }} établissements</span>
+        </header>
+
+        <div class="offers-cta-bar card">
+          <p>Consultez les tarifs en temps réel pour vos dates de séjour.</p>
+          <button class="btn btn-primary" (click)="searchOffers()" [disabled]="loadingOffers">
+            @if (loadingOffers) { <span class="spinner-small"></span> Analyse des prix... }
+            @else { Voir les offres et disponibilités }
+          </button>
+        </div>
+
+        <div class="amadeus-hotels-grid">
+          @for (hotel of hotels; track hotel.hotelId) {
+            <article class="amadeus-hotel-card card">
+              <div class="hotel-icon-ui">🏨</div>
+              <div class="hotel-data">
+                <h3>{{ hotel.name }}</h3>
+                @if (hotel.distance) { <p class="distance">📍 {{ hotel.distance.value }} {{ hotel.distance.unit }} du centre</p> }
+                <p class="ref">Référence : {{ hotel.hotelId }}</p>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Étape 3 : Offres détaillées -->
+    @if (step === 'offers') {
+      <section class="offers-results-travel">
+        <header class="results-nav">
+          <button class="btn btn-outline btn-sm" (click)="goBack()">← Retour</button>
+          <h2>Meilleures offres disponibles</h2>
+          <button class="btn btn-dark btn-sm" (click)="resetSearch()">Nouvelle recherche</button>
+        </header>
+
+        @if (hotelOffers.length === 0) {
+          <div class="empty-state-travel card text-center p-4">
+            <span class="icon">😕</span>
+            <h3>Aucune offre pour ces dates</h3>
+            <p>Tentez de modifier vos dates ou votre destination.</p>
+          </div>
+        } @else {
+          <div class="offers-list-travel">
+            @for (hotel of hotelOffers; track hotel.hotelId) {
+              <article class="global-offer-card card">
+                <header class="offer-hotel-header">
+                  <div class="info">
+                    <h3>{{ hotel.name }}</h3>
+                    @if (hotel.rating) {
+                      <div class="stars-ui">
+                        @for (s of [1,2,3,4,5]; track $index) { <span [class.filled]="isStarFilled($index, hotel.rating)">★</span> }
+                      </div>
+                    }
+                  </div>
+                  <p class="location">📍 {{ hotel.address.cityName || hotel.cityCode }}</p>
+                </header>
+
+                <div class="offer-rooms-container">
+                  @for (offer of hotel.offers; track offer.id) {
+                    <div class="single-offer-item">
+                      <div class="room-desc">
+                        <span class="type">{{ offer.roomDescription || offer.roomType || 'Chambre Classique' }}</span>
+                        @if (offer.beds) { <span class="beds">🛏️ {{ offer.beds }} lit(s) {{ offer.bedType }}</span> }
+                      </div>
+                      <div class="room-price-ui">
+                        <span class="total">{{ offer.price.total }} {{ offer.price.currency }}</span>
+                        <span class="label">Prix global du séjour</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </section>
+    }
+  </div>
+</main>

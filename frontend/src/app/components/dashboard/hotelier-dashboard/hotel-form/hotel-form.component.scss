@@ -1,0 +1,62 @@
+// Formulaire Hôtel - Thème Book Your Travel
+.form-page-travel {
+  background: var(--bg-light);
+  min-height: 100vh;
+}
+
+.form-header-travel {
+  margin-bottom: 2.5rem;
+  .back-link { display: inline-block; font-size: 0.85rem; font-weight: 700; color: var(--secondary-color); text-transform: uppercase; margin-bottom: 1rem; }
+  h1 { font-size: 2.2rem; margin-bottom: 0.5rem; .accent { color: var(--secondary-color); } }
+  .title-line { width: 50px; height: 3px; background: var(--secondary-color); margin-top: 0.5rem; }
+}
+
+.form-card-travel {
+  max-width: 850px; margin: 0 auto; padding: 2.5rem;
+  @media (max-width: 600px) { padding: 1.5rem; }
+
+  .form-section-travel {
+    border: none; padding: 0; margin: 0 0 3rem; border-bottom: 2px solid var(--bg-light); padding-bottom: 2.5rem;
+    &:last-of-type { border-bottom: none; margin-bottom: 1rem; }
+    
+    legend { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; color: var(--primary-color); margin-bottom: 1.5rem; letter-spacing: 1px; }
+  }
+}
+
+.form-row-travel {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+// Sélecteur d'étoiles spécifique
+.stars-selector-travel {
+  display: flex; align-items: center; gap: 0.5rem;
+  .star-btn {
+    font-size: 1.5rem; color: #ddd; background: none; border: none; cursor: pointer; transition: var(--transition);
+    &.active { color: var(--accent-color); transform: scale(1.2); }
+    &:hover { color: var(--secondary-color); }
+  }
+  .stars-label-ui { margin-left: 1rem; font-size: 0.85rem; font-weight: 800; color: #aaa; text-transform: uppercase; }
+}
+
+// Chips pour équipements
+.amenities-selection-grid {
+  display: flex; flex-wrap: wrap; gap: 0.8rem;
+  .section-hint-ui { font-size: 0.85rem; color: #888; margin-bottom: 1.2rem; display: block; width: 100%; }
+  
+  .amenity-chip {
+    padding: 0.6rem 1.2rem; border: 1px solid var(--border-color); border-radius: 20px;
+    background: var(--white); cursor: pointer; font-size: 0.85rem; font-weight: 700; color: #777; transition: var(--transition);
+    
+    &:hover { border-color: var(--secondary-color); color: var(--secondary-color); }
+    &.active { background: var(--secondary-color); color: #fff; border-color: var(--secondary-color); }
+  }
+}
+
+.form-footer-actions {
+  display: flex; justify-content: flex-end; gap: 1.5rem; border-top: 2px solid var(--bg-light); padding-top: 2rem;
+  @media (max-width: 480px) { flex-direction: column; .btn { width: 100%; } }
+}
+
+.loader-area { text-align: center; padding: 5rem; }
+.error-message { font-size: 0.75rem; color: #e74c3c; font-weight: 700; margin-top: 0.4rem; display: block; }
